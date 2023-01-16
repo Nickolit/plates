@@ -1,8 +1,8 @@
 essential-packages:
   pgk.installed:
-    - pkgs:
+    - pkgs:                             # requirement pacages for servers
       - bash
-      - vim
+      - vim-nox
       - build-essential
       - git
       - nodejs

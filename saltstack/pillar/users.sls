@@ -1,8 +1,8 @@
 users:
 
-  nickolit:
+  nickolit:                     # login
     fullname: Nickolos
-    uid: 1010
+    uid: 1010                   # group ID
     shell: /bin/sh
     password:                   # shadow password
     groups:
@@ -10,8 +10,8 @@ users:
       - adm
       - dip
       - plugdev
-    ssh_auth:
-      - ssh-rsa~~~~~
-      - ssh-rsa~~~~~
+    ssh_auth:                   # add ssh keys
+      - ssh-rsa~~~~~            # 1st ssh key
+      - ssh-rsa~~~~~            # 2nd ssh key ...
     user_files:
       enabled: true
