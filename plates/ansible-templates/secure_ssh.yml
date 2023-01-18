@@ -1,8 +1,17 @@
 ---
+
+- hosts: all
+  tasks:
+
+  - name: "Check ./ssh/authorized_keys and replace if any unaccepteble changes"
+    copy:
+      src: /home/ubuntu/.ssh/authorized_keys
+      dest: /home/ubuntu/.ssh/authorized_keys
+
   # Меняем 'hosts: all' на нужные хосты
   # В строке '7' добавляем своего пользователя
   # В строке '60' добавляем своего пользователя
-- hosts: all    # Используем сервера из /home/user/.ssh/known_hosts (в зависимости от установленной системы файл known_hosts все хосты или какие то определённые по необходимсти можно разделить по группам)
+- hosts: servers    # Используем сервера из /home/user/.ssh/known_hosts (в зависимости от установленной системы файл known_hosts все хосты или какие то определённые по необходимсти можно разделить по группам)
   become: true
   remote_user: ubuntu
   tasks:
@@ -38,12 +47,6 @@
   - file:
       dest: /etc/ssh/ssh_host_dsa_key
       state: absent
-
-  - name: "Check ./ssh/authorized_keys and replace if any unaccepteble changes"
-    copy:
-      src: ~/authorized_keys
-      dest: /home/ubuntu/.ssh/authorized_keys
-      remote_src: yes
 
   - name: "Отключить логин по паролю и разрешить логиниться только с помощью publickey."
     lineinfile: dest=/etc/ssh/sshd_config regexp='^#?AuthenticationMethods' line='AuthenticationMethods publickey'
