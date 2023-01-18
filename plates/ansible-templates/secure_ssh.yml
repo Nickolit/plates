@@ -3,14 +3,14 @@
 - hosts: all
   tasks:
 
-  - name: "Check ./ssh/authorized_keys and replace if any unaccepteble changes"
+  - name: "Check file .ssh/authorized_keys on client-server and replace from original auth_keys file if they have any unaccepteble changes"
     copy:
       src: /home/ubuntu/.ssh/authorized_keys
       dest: /home/ubuntu/.ssh/authorized_keys
 
   # Меняем 'hosts: all' на нужные хосты
-  # В строке '7' добавляем своего пользователя
-  # В строке '60' добавляем своего пользователя
+  # В строке '16' добавляем своего пользователя
+  # В строке '68' добавляем своего пользователя
 - hosts: servers    # Используем сервера из /home/user/.ssh/known_hosts (в зависимости от установленной системы файл known_hosts все хосты или какие то определённые по необходимсти можно разделить по группам)
   become: true
   remote_user: ubuntu
