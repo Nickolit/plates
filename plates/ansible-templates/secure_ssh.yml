@@ -22,7 +22,9 @@
     with_items:
     - { reg: '^KexAlgorithms', line: 'KexAlgorithms curve25519-sha256@libssh.org,diffie-hellman-group-exchange-sha256' }
     - { reg: '^Ciphers', line: 'Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr' }
-
+    notify:
+    - Restart sshd
+    
   - name: "Включить наиболее безопасные алгоритмы аутентификации сервера и 2-ю версию протокола"
     lineinfile:
       path: /etc/ssh/sshd_config
@@ -32,6 +34,8 @@
     - { reg: '^Protocol 2', line: 'Protocol 2' }
     - { reg: '^HostKey /etc/ssh/ssh_host_ed25519_key', line: 'HostKey /etc/ssh/ssh_host_ed25519_key' }
     - { reg: '^HostKey /etc/ssh/ssh_host_rsa_key', line: 'HostKey /etc/ssh/ssh_host_rsa_key' }
+    notify:
+    - Restart sshd
 
   - name: "Отключить небезопасные алгоритмы"
     lineinfile:
@@ -41,6 +45,8 @@
     with_items:
     - { reg: '^HostKey /etc/ssh/ssh_host_ecdsa_key' }
     - { reg: '^HostKey /etc/ssh/ssh_host_dsa_key' }
+    notify:
+    - Restart sshd
 
   - name: "И удалить файлы"
     file:
@@ -65,7 +71,9 @@
     - { reg: '^LogLevel', line: 'LogLevel VERBOSE' }
     - { reg: '^PermitRootLogin', line: 'PermitRootLogin No' }
     - { reg: '^AllowUsers', line: AllowUsers ubuntu' }
-
+    notify:
+    - Restart sshd
+    
   handlers:  
     - name: Restart sshd
       service:
