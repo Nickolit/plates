@@ -1,16 +1,16 @@
 ---
 
-- hosts: all
+- hosts: all                 # /etc/ansible/hosts
   tasks:
-
-  - name: "Check file .ssh/authorized_keys on client-server and replace from original auth_keys file if they have any unaccepteble changes"
+  become: true
+  - name: "Check file .ssh/authorized_keys on client-server and replace from original auth_keys file if they have any unacceptable changes"
     copy:
       src: /home/ubuntu/.ssh/authorized_keys
       dest: /home/ubuntu/.ssh/authorized_keys
+    notify:
+    - Restart sshd           # Restart sshd if replace
 
-  # Меняем 'hosts: all' на нужные хосты
-  # В строке '16' добавляем своего пользователя
-- hosts: servers   # /etc/ansible/hosts 
+- hosts: servers             # /etc/ansible/hosts 
   become: true
   remote_user: ubuntu
   tasks:
@@ -36,26 +36,21 @@
   - name: "Отключить небезопасные алгоритмы"
     lineinfile:
       dest: /etc/ssh/sshd_config
-      regexp: '^HostKey /etc/ssh/ssh_host_ecdsa_key'
+      regexp: {{items.reg}}
       state: absent
-  - lineinfile:
-      dest: /etc/ssh/sshd_config
-      regexp: '^HostKey /etc/ssh/ssh_host_dsa_key'
-      state: absent
+    with_items:
+    - { reg: '^HostKey /etc/ssh/ssh_host_ecdsa_key' }
+    - { reg: '^HostKey /etc/ssh/ssh_host_dsa_key' }
 
   - name: "И удалить файлы"
     file:
-      dest: /etc/ssh/ssh_host_ecdsa_key.pub
+      dest: {{items.dst}}
       state: absent
-  - file:
-      dest: /etc/ssh/ssh_host_ecdsa_key
-      state: absent
-  - file:
-      dest: /etc/ssh/ssh_host_dsa_key.pub
-      state: absent
-  - file:
-      dest: /etc/ssh/ssh_host_dsa_key
-      state: absent
+    with_items:
+    - { dst: '/etc/ssh/ssh_host_ecdsa_key.pub' }
+    - { dst: '/etc/ssh/ssh_host_ecdsa_key' }
+    - { dst: '/etc/ssh/ssh_host_dsa_key.pub' }
+    - { dst: '/etc/ssh/ssh_host_dsa_key' }
 
   - name: "Отключить логин по паролю и разрешить логиниться только с помощью publickey."
     lineinfile:
@@ -70,11 +65,12 @@
     - { reg: '^LogLevel', line: 'LogLevel VERBOSE' }
     - { reg: '^PermitRootLogin', line: 'PermitRootLogin No' }
     - { reg: '^AllowUsers', line: AllowUsers ubuntu' }
-    
-    name: Перезапуск sshd.
-    service:
-      name: sshd
-      state: restarted
+
+  handlers:  
+    - name: Restart sshd
+      service:
+        name: sshd
+        state: restarted
 
   - debug:
       msg: "Готово! При необходимости сгенерируйте клиентские ключи с помощью следующей команды: ssh-keygen -t ed25519 -o -a 100 && ssh-keygen -t rsa -b 4096 -o -a 100"
