@@ -1,8 +1,8 @@
 ---
 
 - hosts: all                 # /etc/ansible/hosts
-  tasks:
   become: true
+  tasks:
   - name: "Check file .ssh/authorized_keys on client-server and replace from original auth_keys file if they have any unacceptable changes"
     copy:
       src: /home/ubuntu/.ssh/authorized_keys
@@ -39,24 +39,24 @@
 
   - name: "Отключить небезопасные алгоритмы"
     lineinfile:
-      dest: /etc/ssh/sshd_config
-      regexp: {{items.reg}}
+      path: /etc/ssh/sshd_config
+      regexp: "{{ item }}"
       state: absent
     with_items:
-    - { reg: '^HostKey /etc/ssh/ssh_host_ecdsa_key' }
-    - { reg: '^HostKey /etc/ssh/ssh_host_dsa_key' }
+    - /etc/ssh/ssh_host_ecdsa_key
+    - /etc/ssh/ssh_host_dsa_key
     notify:
     - Restart sshd
 
   - name: "И удалить файлы"
     file:
-      dest: {{items.dst}}
+      dest: "{{ item }}"
       state: absent
     with_items:
-    - { dst: '/etc/ssh/ssh_host_ecdsa_key.pub' }
-    - { dst: '/etc/ssh/ssh_host_ecdsa_key' }
-    - { dst: '/etc/ssh/ssh_host_dsa_key.pub' }
-    - { dst: '/etc/ssh/ssh_host_dsa_key' }
+    - /etc/ssh/ssh_host_ecdsa_key.pub
+    - /etc/ssh/ssh_host_ecdsa_key
+    - /etc/ssh/ssh_host_dsa_key.pub
+    - /etc/ssh/ssh_host_dsa_key
 
   - name: "Отключить логин по паролю и разрешить логиниться только с помощью publickey."
     lineinfile:
@@ -70,15 +70,15 @@
     - { reg: '^#?PubkeyAuthentication', line: 'PubkeyAuthentication yes' }
     - { reg: '^LogLevel', line: 'LogLevel VERBOSE' }
     - { reg: '^PermitRootLogin', line: 'PermitRootLogin No' }
-    - { reg: '^AllowUsers', line: AllowUsers ubuntu' }
+    - { reg: '^AllowUsers', line: 'AllowUsers ubuntu' }
     notify:
     - Restart sshd
     
-  handlers:  
-    - name: Restart sshd
+  handlers:
+    - name: "Restart sshd"
       service:
         name: sshd
         state: restarted
 
-  - debug:
-      msg: "Готово! При необходимости сгенерируйте клиентские ключи с помощью следующей команды: ssh-keygen -t ed25519 -o -a 100 && ssh-keygen -t rsa -b 4096 -o -a 100"
+#  - debug:
+#      msg: "Готово! При необходимости сгенерируйте клиентские ключи с помощью следующей команды: ssh-keygen -t ed25519 -o -a 100 && ssh-keygen -t rsa -b 4096 -o -a 100"
