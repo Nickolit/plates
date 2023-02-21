@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-test-ingress
+  namespace: app-test-nm
+spec:
+  rules:
+  - host: app-test-kube-demo # Указываем имя хоста (всё зависит от адреса платформы, IP или web адресс в случае с облаком)
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: app-test-svc # Указываем имя созданного нами сервиса ранее
+            port:
+              number: 80

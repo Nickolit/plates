@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-test-deploy # Назначаем имя деплоя
+  namespace: app-test-nm # Указываем приложение
+spec:
+  selector:
+    matchLabels:
+      app: app-test # Приложение 
+  replicas: 1 # Назначил 1 реплику для теста, у нас насколько я знаю мало где используются (видимо для экономии ресурсов)
+  strategy:
+    rollingUpdate:
+      maxSurge      : 25% # Указаны условия как пример, поскольку у меня всего 1 реплика
+      maxUnavailable: 25% # Условия для апдейта или перезапуска подов (что бы как минимум 1 работал при обновлении в нашем случае)
+    type: RollingUpdate # Поочерёдное обновление для подов (не всех одновременно, что бы пользователи имели возможность пользоваться)
+  template:
+    metadata:
+      labels:
+        app: app-test # Приложение
+    spec:
+      containers:
+      - name           : app-test # Назначаем имя контейнеру
+        image          : nickolit/lines4:latest # Указываем наш готовый контейнер, который содержит nginx и приложение
+        imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+            cpu   : 100m  # Как пример поскольку нюансы деплоя не обсуждались ;)
+            memory: 100Mi # -\- то же, что и выше
+          limits:
+            cpu   : 100m  # Ограничение ресурсов
+            memory: 100Mi # Ограничение ресурсов (если не нужно - можно убрать или закомментить)
+        livenessProbe:
+          tcpSocket:
+            port: 80
+          initialDelaySeconds: 5
+          timeoutSeconds     : 5
+          successThreshold   : 1
+          failureThreshold   : 3
+          periodSeconds      : 10 # Проба так же указана как пример для тестового задания
+        ports:
+        - containerPort: 8000 # Порт контейнера
+          name         : web 
+      restartPolicy: Always # Само собой после обновлений или изменений рестарт контейнера

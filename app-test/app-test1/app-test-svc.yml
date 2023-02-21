@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name     : app-test-svc # Указываем имя сервиса
+  namespace: app-test-nm # Не забываем пространство имён
+spec:
+  selector:
+    app: app-test # Имя приложения
+  type: ClusterIP
+  ports:
+  - name      : http # Для теста используем обычный http
+    protocol  : TCP  # Так же указываем тсп 
+    port      : 80  
+    targetPort: 80   # Порт нашего контейнера направляем на 80 порт
