@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name           : app-test # Назначаем имя контейнеру
-        image          : localhost:5000/lines4 # Указываем наш готовый контейнер, который содержит nginx и приложение
+        image          : localhost:5000/lines4:latest # Указываем наш готовый контейнер, который содержит nginx и приложение
         imagePullPolicy: IfNotPresent
         resources:
           requests:
