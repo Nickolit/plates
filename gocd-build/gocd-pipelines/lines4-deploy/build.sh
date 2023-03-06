@@ -1,5 +1,7 @@
 #!/bin/bash
 
+exec docker build -t lines-four .
+
 echo "Let us pretend that this is building something ... and takes 20 seconds"
 
 count=0
