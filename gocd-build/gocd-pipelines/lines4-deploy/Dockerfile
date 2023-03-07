@@ -19,8 +19,7 @@ RUN flutter upgrade
 RUN flutter config --enable-web
 
 WORKDIR /app/
-RUN git clone https://github.com/maddcast/lines4.git /app
-
+COPY /home/nickolit/Projects/lines4 /app
 RUN flutter build web
 
 #--------------
