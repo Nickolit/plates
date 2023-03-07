@@ -19,7 +19,7 @@ RUN flutter upgrade
 RUN flutter config --enable-web
 
 WORKDIR /app/
-ENV HOME /home/nickolit/Git/
+ENV HOME /home/nickolit/
 RUN cp $HOME/Git/lines4/ /app
 RUN flutter build web
 
