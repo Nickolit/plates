@@ -19,7 +19,7 @@ RUN flutter upgrade
 RUN flutter config --enable-web
 
 WORKDIR /app/
-COPY .lines4/ /app
+COPY $HOME/nickolit/Git/lines4/ /app
 RUN flutter build web
 
 #--------------
