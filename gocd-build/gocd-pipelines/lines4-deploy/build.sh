@@ -1,5 +1,6 @@
 #!/bin/bash
 
+cp /home/nickolit/Git/lines4/ /home/nickolit/Git/plates
 docker build -t lines-four .
 
 echo "Let us pretend that this is building something ... and takes 20 seconds"
