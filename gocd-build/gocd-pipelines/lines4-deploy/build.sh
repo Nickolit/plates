@@ -2,7 +2,7 @@
 
 docker build -t lines-four .
 docker tag lines-four localhost:5000/lines-four
-docker image push localhost:5000/apps/lines-four
+docker image push localhost:5000/lines-four
 
 cat >my-artifact.html <<EOF
 <html>
