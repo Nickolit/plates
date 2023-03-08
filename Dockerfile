@@ -19,7 +19,7 @@ RUN flutter upgrade
 RUN flutter config --enable-web
 
 WORKDIR /app/
-COPY ./matter/lines4/ /app/
+COPY .matter /app
 RUN flutter build web
 
 #--------------
