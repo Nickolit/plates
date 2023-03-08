@@ -1,7 +1,7 @@
 #!/bin/bash
 
 docker build -t lines-four .
-docker image pull myregistry.local:5000/apps/lines-four
+docker image push myregistry.local:5000/apps/lines-four
 
 cat >my-artifact.html <<EOF
 <html>
