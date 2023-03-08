@@ -1,18 +1,7 @@
 #!/bin/bash
 
 docker build -t lines-four .
-
-echo "Let us pretend that this is building something ... and takes 20 seconds"
-
-count=0
-while [ "$count" -lt 10 ]; do
-    count=$((count + 1))
-
-    color_code=$((31 + (count % 7)))
-    printf "\e[01;${color_code}mBuilding [$count of 10]\e[00m\n"
-
-    sleep 1
-done
+docker image pull myregistry.local:5000/apps/lines-four
 
 cat >my-artifact.html <<EOF
 <html>
