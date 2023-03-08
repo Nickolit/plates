@@ -20,7 +20,7 @@ RUN flutter config --enable-web
 
 WORKDIR /app/
 RUN cp -r $HOME /app
-RUN flutter build web
+RUN sudo flutter build web
 
 #--------------
 FROM nginx:latest as runner
